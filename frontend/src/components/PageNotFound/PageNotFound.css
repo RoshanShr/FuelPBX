@@ -1,0 +1,39 @@
+.invalid-page {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 100vh; /* Full viewport height */
+    background-color: #f4f4f9; /* Light background color */
+    color: #333; /* Text color */
+    font-family: Arial, sans-serif; /* Clean font */
+    text-align: center;
+    padding: 20px;
+  }
+  
+  .content-wrapper {
+    max-width: 600px;
+    padding: 20px;
+    background-color: #ffffff; /* White background for the card */
+    border-radius: 10px; /* Rounded corners */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Subtle shadow */
+  }
+  
+  h1 {
+    font-size: 24px;
+    margin-bottom: 16px;
+    color: #ff4a4a; /* Accent color for heading */
+  }
+  
+  p {
+    font-size: 16px;
+    line-height: 1.5;
+  }
+  
+  a {
+    color: #007bff; /* Link color */
+    text-decoration: none;
+  }
+  
+  a:hover {
+    text-decoration: underline;
+  }

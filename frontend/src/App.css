@@ -1,0 +1,117 @@
+.form-error{
+    color: #a90707;
+    font-style: italic;
+}
+
+.btn{
+    margin-bottom: 10px;
+}
+
+.icon-spacing {
+  margin-right: 8px; /* Adjust spacing as needed */
+}
+
+.sticky-pagination {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    background-color: white; /* Match your page background or choose a contrasting color */
+    box-shadow: 0 -2px 5px rgba(0, 0, 0, 0.1); /* Add a shadow for better visibility */
+    padding: 0px 20px;
+    z-index: 1000; /* Ensure it stays on top of other elements */
+    /* display: flex;
+    justify-content: center;
+    align-items: center; */
+  }
+
+
+  .organization-header {
+    text-align: center;
+    padding: px;
+    background-color: #f5f5f5;
+  }
+  
+  .tabs-container {
+    margin: 20px auto;
+    text-align: center;
+  }
+  
+  .tabs {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+  }
+  
+  .tab {
+    padding: 10px 20px;
+    cursor: pointer;
+    border: 1px solid #ddd;
+    background-color: #fff;
+  }
+  
+  .tab.active {
+    border-color: #007bff;
+    background: #cfe4ff;
+    color: #0d84d9;
+  }
+  
+  .tab-content {
+    margin: 20px auto;
+    padding: 20px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    max-width: 600px;
+    background-color: #f9f9f9;
+  }
+
+
+  .popup {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+  
+  .popup-content {
+    background: white;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.25);
+    width: 300px;
+  }
+  
+  .form-group {
+    margin-bottom: 15px;
+  }
+  
+  .btn {
+    margin-right: 10px;
+  }
+
+  .breadcrumb {
+    background-color: transparent; /* Makes the background transparent */
+    padding: 0; /* Remove padding from the breadcrumb list */
+  }
+  
+  .breadcrumb-item {
+    font-weight: 700; /* Makes the text bolder */
+  }
+  
+  .breadcrumb-text {
+    font-size: 1.5rem; /* Makes the text larger */
+    text-transform: uppercase; /* Capitalizes the text */
+    font-family: 'Arial', sans-serif; /* Stylish font */
+    color: #2c3e50; /* Sets a dark color for the text */
+  }
+  
+  .breadcrumb-item {
+    font-size: 1.6rem; /* Slightly larger for the active item */
+    color: #909091; /* Different color for active item */
+    cursor: pointer;
+  }

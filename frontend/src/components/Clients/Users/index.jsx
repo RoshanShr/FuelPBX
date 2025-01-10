@@ -2,7 +2,6 @@ import "bootstrap/dist/css/bootstrap.min.css";
 import "react-toastify/dist/ReactToastify.css";
 import { registerSchema } from "../../../schemas/registerSchema";
 import { useAddUser } from "../../../api/users/addUserApi";
-import { ToastContainer } from "react-toastify";
 import Pagination from "../../../common/Pagination"; // Import the pagination component
 import { confirmAlert } from "react-confirm-alert"; // Import
 
@@ -13,8 +12,8 @@ import { useDeleteUser } from "../../../api/users/deleteUserApi";
 import { useUpdateUser } from "../../../api/users/updateUserApi";
 import UserAddForm from "../Users/addForm";
 import { FaTrash, FaUserEdit } from "react-icons/fa";
-import {IoMdPersonAdd } from "react-icons/io";
-import moment from 'moment';
+import { IoMdPersonAdd } from "react-icons/io";
+import moment from "moment";
 
 function Users(organization) {
   const { id, name, alias } = organization.props;
@@ -40,8 +39,8 @@ function Users(organization) {
   const totalItems = usersData?.totalItems || 0;
 
   const togglePopup = () => {
-    setShowPopup(!showPopup);
     setEditUser(null);
+    setShowPopup(!showPopup);
   };
 
   const handleItemsPerPageChange = (newItemsPerPage) => {
@@ -62,6 +61,7 @@ function Users(organization) {
   const handleEditButtonClick = (user) => {
     user["organization_alias"] = alias;
     user["password"] = "";
+
     setEditUser(user);
     setShowPopup(true);
   };
@@ -86,69 +86,77 @@ function Users(organization) {
     });
   };
 
-
   return (
-    <div>
-      <ToastContainer />
-      <button
-        title="Add user"
-        className="btn btn-primary"
-        style={{ float: "right" }}
-        onClick={togglePopup}
-      >
-        <IoMdPersonAdd />
-      </button>
-      <table className="table">
-        <thead>
-          <tr>
-            <th>Fullname</th>
-            <th>Username</th>
-            <th>Email</th>
-            <th>Created at</th>
-            <th>Action</th>
-          </tr>
-        </thead>
-        <tbody>
-          {isLoading ? (
-            <tr>
-              <td colSpan="5">Loading...</td>
-            </tr>
-          ) : isError ? (
-            <tr>
-              <td colSpan="5">Error: {error.message}</td>
-            </tr>
-          ) : users.length > 0 ? (
-            users.map((user) => (
-              <tr key={user.id}>
-                <td>{user.fullname}</td>
-                <td>{user.username}</td>
-                <td>{user.email}</td>
-                <td>{moment(user.start_time).format('dddd, MMMM Do YYYY, h:mm:ss a')}</td>
-                <td>
-                  <button
-                    title="Edit user"
-                    className="btn btn-sm btn-info"
-                    onClick={() => handleEditButtonClick(user)}
-                  >
-                    <FaUserEdit />
-                  </button>
-                  <button
-                    title="Delete user"
-                    className="btn btn-sm btn-danger"
-                    onClick={() => deleteConfirmation(user.id)}
-                  >
-                    <FaTrash />
-                  </button>
-                </td>
+    <>
+      <div className="d-flex justify-content-end">
+        <button
+          title="Add user"
+          className="btn btn-primary"
+          onClick={togglePopup}
+        >
+          <IoMdPersonAdd />
+        </button>
+      </div>
+
+      <div className="d-flex" style={{ height: "calc(100% - 172px)" }}>
+        <div className="overflow-auto flex-grow-1">
+          <table className="table overflow-auto">
+            <thead>
+              <tr>
+                <th>Fullname</th>
+                <th>Username</th>
+                <th>Email</th>
+                <th>Created at</th>
+                <th>Action</th>
               </tr>
-            ))
-          ) : (
-            <tr>
-              <td colSpan="5">No users available</td>
-            </tr>
-          )}
-        </tbody>
-      </table>
+            </thead>
+            <tbody>
+              {isLoading ? (
+                <tr>
+                  <td colSpan="5">Loading...</td>
+                </tr>
+              ) : isError ? (
+                <tr>
+                  <td colSpan="5">Error: {error.message}</td>
+                </tr>
+              ) : users.length > 0 ? (
+                users.map((user) => (
+                  <tr key={user.id}>
+                    <td>{user.fullname}</td>
+                    <td>{user.username}</td>
+                    <td>{user.email}</td>
+                    <td>
+                      {moment(user.start_time).format(
+                        "dddd, MMMM Do YYYY, h:mm:ss a"
+                      )}
+                    </td>
+                    <td>
+                      <button
+                        title="Edit user"
+                        className="btn btn-sm btn-info"
+                        onClick={() => handleEditButtonClick(user)}
+                      >
+                        <FaUserEdit />
+                      </button>
+                      <button
+                        title="Delete user"
+                        className="btn btn-sm btn-danger"
+                        onClick={() => deleteConfirmation(user.id)}
+                      >
+                        <FaTrash />
+                      </button>
+                    </td>
+                  </tr>
+                ))
+              ) : (
+                <tr>
+                  <td colSpan="5">No users available</td>
+                </tr>
+              )}
+            </tbody>
+          </table>
+        </div>
+      </div>
       <Pagination
         totalItems={totalItems}
         itemsPerPage={itemsPerPage}
@@ -197,7 +205,7 @@ function Users(organization) {
           </div>
         </div>
       )}
-    </div>
+    </>
   );
 }
 

@@ -43,8 +43,8 @@ const CommonWrapper = ({ children }) => {
           </div>
         </div>
         {/* Main Content */}
-        <div className="flex-grow-1 overflow-auto mt-1">
-         <Outlet /> 
+        <div className="flex-grow-1 overflow-hidden mt-1">
+          <Outlet />
         </div>
       </div>
     </div>

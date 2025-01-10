@@ -15,7 +15,7 @@ const usersApi = axios.create({
 export const getUsers = async (organization_id, loggedData,page, limit) => {
     const response = await usersApi.get(`/users?organization_id=${organization_id}&page=${page}&limit=${limit}`, {
         headers: {
-            "Authorization": `Bearer ${loggedData.loggedUser.token}`
+            "Authorization": `Bearer ${loggedData.loggedUser.accessToken}`
         }
     });
     return response.data;

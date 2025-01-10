@@ -2,16 +2,13 @@ import { Link } from "react-router-dom";
 import { useEffect } from "react";
 import { useState, useContext } from "react";
 import { UserContext } from "../../contexts/UserContext";
+import { useLocation } from "react-router-dom";
 
 const Sidebar = () => {
-    const loggedData = useContext(UserContext);
-  
-  // Retrieve active link from localStorage or default to "/clients"
-  const [activeLink, setActiveLink] = useState(
-    localStorage.getItem("activeLink") || "/clients"
-  );
+  const location = useLocation();
+  const loggedData = useContext(UserContext);
+  const [activeLink, setActiveLink] = useState(location.pathname);
 
-  // Update active link in localStorage on change
   const handleActiveLink = (path) => {
     setActiveLink(path);
     localStorage.setItem("activeLink", path);
@@ -19,7 +16,7 @@ const Sidebar = () => {
 
   useEffect(() => {
     // Ensure activeLink is synced with localStorage on mount
-    const storedActiveLink = localStorage.getItem("activeLink");
+    const storedActiveLink = location.pathname;
     if (storedActiveLink) {
       setActiveLink(storedActiveLink);
     }
@@ -43,35 +40,33 @@ const Sidebar = () => {
       </h2>
       <div className="d-flex flex-column h-90">
         <ul className="list-unstyled flex-grow-1">
-        <li
+          <li
             className={`mb-3 ${activeLink === "/dashboard" ? "active" : ""}`}
             onClick={() => handleActiveLink("/dashboard")}
           >
             <Link
               to="/dashboard"
               className={`text-decoration-none text-dark d-flex align-items-center py-2 px-3 rounded ${
-                activeLink === "/dashboard"
-                  ? "active_menu"
-                  : "hover-bg"
+                activeLink === "/dashboard" ? "active_menu" : "hover-bg"
               }`}
             >
               <i className="bi bi-speedometer2 me-2"></i> Dashboard
             </Link>
           </li>
-          {loggedData.loggedUser.isAdmin===1 && (
-          <li
-            className={`mb-3 ${activeLink === "/clients" ? "active" : ""}`}
-            onClick={() => handleActiveLink("/clients")}
-          >
-            <Link
-              to="/clients"
-              className={`text-decoration-none text-dark d-flex align-items-center py-2 px-3 rounded ${
-                activeLink === "/clients" ? "active_menu" : "hover-bg"
-              }`}
+          {loggedData.loggedUser.isAdmin === 1 && (
+            <li
+              className={`mb-3 ${activeLink === "/clients" ? "active" : ""}`}
+              onClick={() => handleActiveLink("/clients")}
             >
-              <i className="bi bi-people-fill me-2"></i> Clients
-            </Link>
-          </li>
+              <Link
+                to="/clients"
+                className={`text-decoration-none text-dark d-flex align-items-center py-2 px-3 rounded ${
+                  activeLink === "/clients" ? "active_menu" : "hover-bg"
+                }`}
+              >
+                <i className="bi bi-people-fill me-2"></i> Clients
+              </Link>
+            </li>
           )}
           <li
             className={`mb-3 ${activeLink === "/reports" ? "active" : ""}`}
@@ -86,9 +81,7 @@ const Sidebar = () => {
               <i className="bi bi-bar-chart-fill me-2"></i> Reports
             </Link>
           </li>
-       
         </ul>
-
       </div>
     </div>
   );

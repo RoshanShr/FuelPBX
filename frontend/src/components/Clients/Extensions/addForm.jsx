@@ -1,5 +1,8 @@
 import React from "react";
 import { useFormik } from "formik";
+import { useState } from "react";
+import { FaEye } from "react-icons/fa";
+import { FaEyeSlash } from "react-icons/fa";
 
 const ExtensionAddForm = ({
   initialValues,
@@ -17,6 +20,12 @@ const ExtensionAddForm = ({
     },
     enableReinitialize: true, // Ensure form values reset on edit/add toggle
   });
+
+  const [passwordVisible, setPasswordVisible] = useState(false);
+
+  const togglePasswordVisibility = () => {
+    setPasswordVisible((prevState) => !prevState);
+  };
 
   return (
     <form onSubmit={formikExtension.handleSubmit}>
@@ -66,8 +75,9 @@ const ExtensionAddForm = ({
           Password
         </label>
         <div className="col-sm-9">
+        <div className="input-group">
           <input
-            type="text"
+            type={passwordVisible ? "text" : "password"}
             className="form-control"
             id="password"
             name="password"
@@ -75,7 +85,15 @@ const ExtensionAddForm = ({
             onBlur={formikExtension.handleBlur}
             value={formikExtension.values.password}
           />
-          {formikExtension.errors.password &&
+          <span
+            className="input-group-text"
+            onClick={togglePasswordVisibility}
+            style={{ cursor: "pointer" }}
+          >
+            {passwordVisible ? <FaEyeSlash /> : <FaEye />}
+          </span>
+        </div>
+        {formikExtension.errors.password &&
           formikExtension.touched.password ? (
             <p className="form-error">{formikExtension.errors.password}</p>
           ) : null}

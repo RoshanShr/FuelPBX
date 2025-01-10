@@ -9,10 +9,19 @@ import { UserContext } from "../../contexts/UserContext";
 
 function ClientDetails() {
   const location = useLocation();
-  // const client = location.state?.client;
-    const loggedData = useContext(UserContext);
-  
-  const [client, setClient] = useState({id:loggedData.loggedUser.organization_id, alias:loggedData.loggedUser.alias, name:loggedData.loggedUser.company});
+  const loggedData = useContext(UserContext);
+
+  const [client, setClient] = useState(() => {
+    if (location.pathname == "/dashboard") {
+      return {
+        id: loggedData.loggedUser.organization_id,
+        alias: loggedData.loggedUser.alias,
+        name: loggedData.loggedUser.company,
+      };
+    } else {
+      return location.state?.client;
+    }
+  });
   const navigate = useNavigate();
 
   const [activeTab, setActiveTab] = useState("users");
@@ -24,12 +33,9 @@ function ClientDetails() {
   const goBack = () => navigate("/clients");
 
   return (
-    <div className="flex-grow-1 p-4">
-      <nav
-        className="d-flex"
-        aria-label="breadcrumb"
-      >
-         {/* <button
+    <div className="flex-grow-1 h-100 p-4">
+      <nav className="d-flex" aria-label="breadcrumb">
+        {/* <button
           title="Go back"
           className="btn btn-sm btn-outline-secondary"
           onClick={goBack}
@@ -38,22 +44,20 @@ function ClientDetails() {
           Go back
         </button> */}
         <ol className="breadcrumb mb-0">
-        {location.pathname!='/dashboard' && (
-          <li className="breadcrumb-item"onClick={goBack}>
-            <a onClick={goBack}>Clients</a>
-          </li>
-        )}
-        
-      
+          {location.pathname != "/dashboard" && (
+            <li className="breadcrumb-item" onClick={goBack}>
+              <a onClick={goBack}>Clients</a>
+            </li>
+          )}
+
           <li className="breadcrumb-item active" aria-current="page">
-          {location.pathname=='/dashboard' ? "Dashboard": client.name}
+            {location.pathname == "/dashboard" ? "Dashboard" : client.name}
           </li>
         </ol>
-       
       </nav>
 
-      <div className="organization-page">
-        <div className="tabs-container">
+      <div className="organization-page h-100">
+        <div className="tabs-container h-100">
           <ul className="nav nav-tabs" style={{ marginBottom: "20px" }}>
             <li
               className="nav-item"
@@ -102,10 +106,8 @@ function ClientDetails() {
             </button>
           </div> */}
 
-          <div>
-            {activeTab === "users" && <Users props={client} />}
-            {activeTab === "extensions" && <Extensions props={client} />}
-          </div>
+          {activeTab === "users" && <Users props={client} />}
+          {activeTab === "extensions" && <Extensions props={client} />}
         </div>
       </div>
     </div>

@@ -26,7 +26,7 @@ export const deleteUser = async ({
     try {
         const response = await userApi.delete("/users", {
             headers: {
-                "Authorization": `Bearer ${loggedData.loggedUser.token}`
+                "Authorization": `Bearer ${loggedData.loggedUser.accessToken}`
             },
             data: {
                 id: id

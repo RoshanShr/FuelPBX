@@ -23,7 +23,7 @@ export const addExtension = async (
 ) => {
     await clientApi.post("/extensions", data.extensionData, {
         headers: {
-            "Authorization": `Bearer ${data.loggedData.loggedUser.token}`
+            "Authorization": `Bearer ${data.loggedData.loggedUser.accessToken}`
         }
     });
 

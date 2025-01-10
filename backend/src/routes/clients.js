@@ -4,12 +4,15 @@ import {
     addClient,
     deleteClient
 } from '../controllers/clientController.js';
-import verifyToken from '../middleware/verifyToken.js';
+import verifyAccessToken from '../middleware/verifyAccessToken.js';
 
 const router = express.Router();
 
-router.get("/clients", verifyToken, getClients);
-router.post("/clients", verifyToken, addClient);
-router.delete("/clients", verifyToken, deleteClient);
+// Apply the middleware globally to all routes
+router.use(verifyAccessToken);
+
+router.get("/clients", getClients);
+router.post("/clients", addClient);
+router.delete("/clients", deleteClient);
 
 export default router;

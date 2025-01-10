@@ -1,10 +1,19 @@
 import 'dotenv/config';
 import bcrypt from 'bcryptjs';
-import jwt from 'jsonwebtoken';
-import  User  from '../models/userModel.js';
-import { AppDataSource} from '../config/database.js';
-import {getCurrentDateTime} from '../utils/timeUtils.js'
+import User from '../models/userModel.js';
+import {
+    AppDataSource
+} from '../config/database.js';
+import {
+    getCurrentDateTime
+} from '../utils/timeUtils.js'
 import Client from '../models/clientModel.js';
+import {
+    generateAccessToken
+} from '../utils/generateAccessToken.js'
+import {
+    generateRefreshToken
+} from '../utils/generateRefreshToken.js'
 
 export const checkUser = async (req, res) => {
     try {
@@ -24,31 +33,34 @@ export const checkUser = async (req, res) => {
             })
 
         } else {
-            const organizationData = await getClientAccess(loginData.organization_id);  // Wait for the Promise to resolve
+            const organizationData = await getClientAccess(loginData.organization_id); // Wait for the Promise to resolve
 
             //create and send token if user found
             bcrypt.compare(userDetails.password, loginData.password, (err, success) => {
                 if (success == true) {
-                    jwt.sign({
+                    const accessToken = generateAccessToken({
                         email: userDetails.email
-                    }, process.env.JWT_SECRET_KEY, (err, token) => {
-                        if (!err) {
-                            res.send({
-                                message: "Login Success",
-                                token: token,
-                                userid: loginData.id,
-                                name: loginData.username,
-                                organization_id:loginData.organization_id,
-                                fullname:loginData.fullname,
-                                email:loginData.email,
-                                isAdmin:organizationData.is_admin,
-                                company:organizationData.name,
-                                alias:organizationData.alias,
+                    });
+                    const refreshToken = generateRefreshToken({
+                        email: userDetails.email
+                    });
+
+                    res.send({
+                        message: "Login Success",
+                        accessToken : accessToken,
+                        refreshToken : refreshToken,
+                        userid: loginData.id,
+                        name: loginData.username,
+                        organization_id: loginData.organization_id,
+                        fullname: loginData.fullname,
+                        email: loginData.email,
+                        isAdmin: organizationData.is_admin,
+                        company: organizationData.name,
+                        alias: organizationData.alias,
 
 
-                            });
-                        }
-                    })
+                    });
+
                 } else {
                     res.status(403).send({
                         message: "Incorrect password"
@@ -65,14 +77,14 @@ export const checkUser = async (req, res) => {
 }
 
 
-async function getClientAccess(organization_id){
+async function getClientAccess(organization_id) {
     const existingExtension = await AppDataSource
-    .getRepository(Client)
-    .findOne({
-        where: {
-            id: organization_id
-        }
-    }) 
+        .getRepository(Client)
+        .findOne({
+            where: {
+                id: organization_id
+            }
+        })
     return existingExtension;
 }
 
@@ -104,7 +116,7 @@ export const registerUser = async (req, res) => {
                                         username: username,
                                         email: email,
                                         password: password,
-                                        created_at:getCurrentDateTime
+                                        created_at: getCurrentDateTime
                                     }, ])
                                     .execute()
                                 res.status(201).send({

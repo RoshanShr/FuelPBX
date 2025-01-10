@@ -1,12 +1,15 @@
 import React from "react";
 import { useFormik } from "formik";
+import { useState } from "react";
+import { FaEye } from "react-icons/fa";
+import { FaEyeSlash } from "react-icons/fa";
 
-const UserAddForm = ({ 
-  initialValues, 
-  validationSchema, 
-  onSubmit, 
-  onCancel, 
-  isEdit = false 
+const UserAddForm = ({
+  initialValues,
+  validationSchema,
+  onSubmit,
+  onCancel,
+  isEdit = false,
 }) => {
   const formik = useFormik({
     initialValues,
@@ -16,8 +19,17 @@ const UserAddForm = ({
       action.resetForm();
     },
     enableReinitialize: true, // Ensure form values reset on edit/add toggle
-
   });
+
+  const [passwordVisible, setPasswordVisible] = useState(false);
+  const [passwordVisibleConfirm, setPasswordVisibleConfirm] = useState(false);
+
+  const togglePasswordVisibility = () => {
+    setPasswordVisible((prevState) => !prevState);
+  };
+  const togglePasswordVisibilityConfirm = () => {
+    setPasswordVisibleConfirm((prevState) => !prevState);
+  };
 
   return (
     <form onSubmit={formik.handleSubmit}>
@@ -88,18 +100,28 @@ const UserAddForm = ({
               Password
             </label>
             <div className="col-sm-9">
-              <input
-                type="password"
-                className="form-control"
-                id="password"
-                name="password"
-                onChange={formik.handleChange}
-                onBlur={formik.handleBlur}
-                value={formik.values.password}
-              />
+              <div className="input-group">
+                <input
+                  type={passwordVisible ? "text" : "password"}
+                  className="form-control"
+                  id="password"
+                  name="password"
+                  onChange={formik.handleChange}
+                  onBlur={formik.handleBlur}
+                  value={formik.values.password}
+                />
+                <span
+                  className="input-group-text"
+                  onClick={togglePasswordVisibility}
+                  style={{ cursor: "pointer" }}
+                >
+                  {passwordVisible ? <FaEyeSlash /> : <FaEye />}
+                </span>
+            
+              </div>
               {formik.errors.password && formik.touched.password && (
-                <p className="form-error">{formik.errors.password}</p>
-              )}
+                  <p className="form-error">{formik.errors.password}</p>
+                )}
             </div>
           </div>
 
@@ -111,21 +133,30 @@ const UserAddForm = ({
               Confirm Password
             </label>
             <div className="col-sm-9">
-              <input
-                type="password"
-                className="form-control"
-                id="confirm_password"
-                name="confirm_password"
-                onChange={formik.handleChange}
-                onBlur={formik.handleBlur}
-                value={formik.values.confirm_password}
-              />
+              <div className="input-group">
+                <input
+                  type={passwordVisibleConfirm ? "text" : "password"}
+                  className="form-control"
+                  id="confirm_password"
+                  name="confirm_password"
+                  onChange={formik.handleChange}
+                  onBlur={formik.handleBlur}
+                  value={formik.values.confirm_password}
+                />
+                <span
+                  className="input-group-text"
+                  onClick={togglePasswordVisibilityConfirm}
+                  style={{ cursor: "pointer" }}
+                >
+                  {passwordVisibleConfirm ? <FaEyeSlash /> : <FaEye />}
+                </span>
+              </div>
               {formik.errors.confirm_password &&
-                formik.touched.confirm_password && (
-                  <p className="form-error">
-                    {formik.errors.confirm_password}
-                  </p>
-                )}
+                  formik.touched.confirm_password && (
+                    <p className="form-error">
+                      {formik.errors.confirm_password}
+                    </p>
+                  )}
             </div>
           </div>
         </>

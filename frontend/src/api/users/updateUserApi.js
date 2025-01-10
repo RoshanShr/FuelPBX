@@ -23,7 +23,7 @@ export const updateUser = async (
 ) => {
     await clientApi.put(`/users/${data.userData.id}`, data.userData, {
         headers: {
-            "Authorization": `Bearer ${data.loggedData.loggedUser.token}`
+            "Authorization": `Bearer ${data.loggedData.loggedUser.accessToken}`
         }
     });
 

@@ -11,20 +11,23 @@ const clientApi = axios.create({
     baseURL: apiUrl
 });
 
-export const getReports = async (loggedData, page, limit) => {
-    const response = await clientApi.get(`/reports?page=${page}&limit=${limit}`, {
+import apiClient from "../auth/refreshTokenApi";
+
+
+export const getReports = async (loggedData, page, limit,  disposition, callType) => {
+    const response = await apiClient.get(`/reports?alias=${loggedData.loggedUser.alias}&disposition=${disposition}&callType=${callType}&page=${page}&limit=${limit}`, {
         headers: {
-            "Authorization": `Bearer ${loggedData.loggedUser.token}`
+            "Authorization": `Bearer ${localStorage.getItem("accessToken")}`
         }
     });
     return response.data;
 }
 
 
-export const useGetReports = (loggedData, currentPage, itemsPerPage) => {
+export const useGetReports = (loggedData, currentPage, itemsPerPage, disposition, callType) => {
     return useQuery(
-        ["reports", currentPage,  itemsPerPage], // Query key includes currentPage for dynamic fetching
-        () => getReports(loggedData, currentPage, itemsPerPage),
+        ["reports", currentPage,  itemsPerPage,disposition, callType], // Query key includes currentPage for dynamic fetching
+        () => getReports(loggedData, currentPage, itemsPerPage,  disposition, callType),
         {
           //  staleTime: 300000,  // Set staleTime to 5 minutes (in ms)
           //  cacheTime: 600000,  // Set cacheTime to 10 minutes (in ms)

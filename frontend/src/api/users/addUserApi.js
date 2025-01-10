@@ -23,7 +23,7 @@ export const addUser = async (
 ) => {
     await clientApi.post("/users", data.userData, {
         headers: {
-            "Authorization": `Bearer ${data.loggedData.loggedUser.token}`
+            "Authorization": `Bearer ${data.loggedData.loggedUser.accessToken}`
         }
     });
 

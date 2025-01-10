@@ -1,6 +1,5 @@
 import { UserContext } from "../../contexts/UserContext";
 import { useState, useContext } from "react";
-import { ToastContainer } from "react-toastify";
 import { useFormik } from "formik";
 import { clientSchema } from "../../schemas/clientSchema";
 import { useDeleteClient } from "../../api/clients/deleteClientsApi";
@@ -94,8 +93,7 @@ const Clients = () => {
   };
 
   return (
-    <div className="flex-grow-1 p-4">
-      <ToastContainer />
+    <div className="flex-grow-1 h-100 p-4">
       <nav aria-label="breadcrumb">
         <ol className="breadcrumb">
           <li className="breadcrumb-item active" aria-current="page">
@@ -104,90 +102,91 @@ const Clients = () => {
         </ol>
       </nav>
 
-      {loggedData.loggedUser.isAdmin===1 && (
-      <div>
-        <button
-          title="Add Client"
-          style={{ float: "right" }}
-          className="btn btn-primary"
-          onClick={togglePopup}
-        >
-          <IoMdPersonAdd />
-        </button>
-      </div>
-)}
+      {loggedData.loggedUser.isAdmin === 1 && (
+        <div className="d-flex justify-content-end">
+          <button
+            title="Add Client"
+            className="btn btn-primary"
+            onClick={togglePopup}
+          >
+            <IoMdPersonAdd />
+          </button>
+        </div>
+      )}
 
-      <table className="table table-hover">
-        <thead>
-          <tr>
-            <th>Client</th>
-            <th>Alias</th>
-            <th>User(s) limit</th>
-            <th>Extension(s) limit</th>
-            {loggedData.loggedUser.isAdmin===1 && (
-            <th>Action</th>
-            )}
-          </tr>
-        </thead>
-        <tbody>
-          {isLoading ? (
-            <tr>
-              <td colSpan="3">Loading...</td>
-            </tr>
-          ) : isError ? (
-            <tr>
-              <td colSpan="3">Error: {error.message}</td>
-            </tr>
-          ) : clients.length > 0 ? (
-            clients.map((client) => (
-              <tr
-                key={client.id}
-                onClick={() => detailPage(client)}
-                style={{ cursor: "pointer" }}
-              >
-                <td>{client.name}</td>
-                <td>{client.alias}</td>
-                <td>{client.user_limit}</td>
-                <td>{client.extension_limit}</td>
-                {loggedData.loggedUser.isAdmin===1 && (
-                <td>
-                  <span
-                    data-bs-toggle="tooltip"
-                    data-bs-placement="top"
-                    title={
-                      client.name === "Voxcrow"
-                        ? "You cannot delete Voxcrow"
-                        : "Delete this client"
-                    }
-                    onClick={(e) => {
-                      e.stopPropagation(); // Prevent row click when delete button is clicked
-                      client.name === "Voxcrow"
-                        ? ""
-                        : deleteConfirmation(client.id);
-                    }}
-                  >
-                    <button
-                      disabled={client.name === "Voxcrow"}
-                      className="btn btn-sm btn-danger"
-                    >
-                      <FaTrash />
-                    </button>
-                  </span>
-                </td>
-                )}
+      <div className="d-flex" style={{ height: "calc(100% - 140px)" }}>
+        <div className="overflow-auto flex-grow-1">
+          <table className="table table-hover overflow-auto">
+            <thead>
+              <tr>
+                <th>Client</th>
+                <th>Alias</th>
+                <th>User(s) limit</th>
+                <th>Extension(s) limit</th>
+                {loggedData.loggedUser.isAdmin === 1 && <th>Action</th>}
               </tr>
-            ))
-          ) : (
-            <tr>
-              <td colSpan="3">No clients available</td>
-            </tr>
-          )}
-        </tbody>
-      </table>
+            </thead>
+            <tbody>
+              {isLoading ? (
+                <tr>
+                  <td colSpan="3">Loading...</td>
+                </tr>
+              ) : isError ? (
+                <tr>
+                  <td colSpan="3">Error: {error.message}</td>
+                </tr>
+              ) : clients.length > 0 ? (
+                clients.map((client) => (
+                  <tr
+                    key={client.id}
+                    onClick={() => detailPage(client)}
+                    style={{ cursor: "pointer" }}
+                  >
+                    <td>{client.name}</td>
+                    <td>{client.alias}</td>
+                    <td>{client.user_limit}</td>
+                    <td>{client.extension_limit}</td>
+                    {loggedData.loggedUser.isAdmin === 1 && (
+                      <td>
+                        <span
+                          data-bs-toggle="tooltip"
+                          data-bs-placement="top"
+                          title={
+                            client.name === "Voxcrow"
+                              ? "You cannot delete Voxcrow"
+                              : "Delete this client"
+                          }
+                          onClick={(e) => {
+                            e.stopPropagation(); // Prevent row click when delete button is clicked
+                            client.name === "Voxcrow"
+                              ? ""
+                              : deleteConfirmation(client.id);
+                          }}
+                        >
+                          <button
+                            disabled={client.name === "Voxcrow"}
+                            className="btn btn-sm btn-danger"
+                          >
+                            <FaTrash />
+                          </button>
+                        </span>
+                      </td>
+                    )}
+                  </tr>
+                ))
+              ) : (
+                <tr>
+                  <td colSpan="3">No clients available</td>
+                </tr>
+              )}
+            </tbody>
+          </table>
+        </div>
+      </div>
 
       {/* Pagination Component */}
       {!isLoading && !isError && (
-        <div className="sticky-pagination">
+        <div>
           <Pagination
             totalItems={totalItems}
             itemsPerPage={itemsPerPage}
@@ -256,7 +255,7 @@ const Clients = () => {
                     </label>
                     <div className="col-sm-9">
                       <input
-                        type="text"
+                        type="number"
                         className="form-control"
                         id="user_limit"
                         name="user_limit"
@@ -275,7 +274,7 @@ const Clients = () => {
                     </label>
                     <div className="col-sm-9">
                       <input
-                        type="text"
+                        type="number"
                         className="form-control"
                         id="extension_limit"
                         name="extension_limit"
@@ -283,8 +282,11 @@ const Clients = () => {
                         onBlur={formik.handleBlur}
                         value={formik.values.extension_limit}
                       />
-                      {formik.errors.extension_limit && formik.touched.extension_limit ? (
-                        <p className="form-error">{formik.errors.extension_limit}</p>
+                      {formik.errors.extension_limit &&
+                      formik.touched.extension_limit ? (
+                        <p className="form-error">
+                          {formik.errors.extension_limit}
+                        </p>
                       ) : null}
                     </div>
                   </div>

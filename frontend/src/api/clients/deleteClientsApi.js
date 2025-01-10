@@ -27,7 +27,7 @@ export const deleteClient = async ({
     try {
         const response = await clientApi.delete("/clients", {
             headers: {
-                "Authorization": `Bearer ${loggedData.loggedUser.token}`
+                "Authorization": `Bearer ${loggedData.loggedUser.accessToken}`
             },
             data: {
                 id: id

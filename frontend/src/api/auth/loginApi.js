@@ -49,8 +49,10 @@ export const useLogin = () => {
 
         }, {
             onSuccess: (response) => {
-                if (response.data.token != undefined) {
+                if (response.data.accessToken != undefined) {
                     localStorage.setItem(jwtSecretKey, JSON.stringify(response.data));
+                    localStorage.setItem("accessToken", response.data.accessToken); 
+                    localStorage.setItem("refreshToken", response.data.refreshToken); 
                     loggedData.setLoggedUser(response.data);
                     navigate("/dashboard")
                 }

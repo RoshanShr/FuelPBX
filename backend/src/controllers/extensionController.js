@@ -5,6 +5,11 @@ import {
 import 'dotenv/config';
 import Extension from '../models/extensionModel.js';
 import Client from '../models/clientModel.js';
+import {
+    writeDialplan
+} from '../controllers/dialplanController.js';
+import { exec } from 'child_process';
+
 
 import {
     getCurrentDateTime
@@ -13,6 +18,7 @@ import {
 export const getExtensions = async (req, res) => {
     try {
         const organization_id = parseInt(req.query.organization_id)
+        const alias = req.query.alias;
         const page = parseInt(req.query.page, 10) || 1; // Default to page 1
         const limit = parseInt(req.query.limit, 10) || 10; // Default to 10 items per page
         const offset = (page - 1) * limit; // Calculate the offset for the query
@@ -26,6 +32,31 @@ export const getExtensions = async (req, res) => {
             take: limit, // Limit the number of records to fetch
         });
 
+
+        for (let key = 0; key < extensions.length; key++) {
+            if (req.hostname == 'localhost') {
+                extensions[key].status = 'Offline'; // Default to 'Offline' if error occurs
+            } else {
+                const ext = extensions[key];
+                const agent = `${ext.extension}_${alias}`;
+                const command = `sudo /usr/sbin/asterisk -rx 'sip show peer ${agent}'`;
+                try {
+                    // Use a promise-based approach to exec the command
+                    const output = await executeCommand(command);
+                    const checkStatus = output[56] ?.split(':');
+
+                    // Check if the status is '(null)' and set status accordingly
+                    if (checkStatus && checkStatus[1] && checkStatus[1].trim() === '(null)') {
+                        extensions[key].status = 'Offline';
+                    } else {
+                        extensions[key].status = 'Online';
+                    }
+                } catch (error) {
+                    console.error('Error checking SIP peer status:', error);
+                    extensions[key].status = 'Offliness'+ error; // Default to 'Offline' if error occurs
+                }
+            }
+        }
         // Return paginated response
         res.json({
             data: extensions, // The clients for the current page
@@ -38,6 +69,24 @@ export const getExtensions = async (req, res) => {
         res.status(500).send('Database error');
     }
 };
+
+// Function to execute command and return output as an array of strings
+function executeCommand(command) {
+    return new Promise((resolve, reject) => {
+        exec(command, {
+            shell: '/bin/bash'
+        }, (error, stdout, stderr) => {
+            if (error) {
+                reject(error);
+                return;
+            }
+            if (stderr) {
+                console.error(stderr);
+            }
+            resolve(stdout.split('\n')); // Split output by newlines and return as an array
+        });
+    });
+}
 
 
 export const addExtension = async (req, res) => {
@@ -86,6 +135,9 @@ export const addExtension = async (req, res) => {
                     created_at: getCurrentDateTime
                 }, ])
                 .execute()
+            if (req.hostname != 'localhost') {
+                writeDialplan()
+            }
             res.status(201).send({
                 message: "Extension added"
             })
@@ -135,6 +187,9 @@ export const updateExtension = async (req, res) => {
 
             try {
                 await AppDataSource.getRepository(Extension).save(existingExtension);
+                if (req.hostname != 'localhost') {
+                    writeDialplan()
+                }
                 res.status(200).send({
                     message: "Extension updated successfully"
                 });
@@ -184,6 +239,9 @@ export const deleteExtension = async (req, res) => {
                     id: id
                 })
                 .execute()
+            if (req.hostname != 'localhost') {
+                writeDialplan()
+            }
             res.status(200).send({
                 message: "404 deleted successfully"
             })

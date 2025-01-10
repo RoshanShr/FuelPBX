@@ -28,6 +28,13 @@ const Extension = new EntitySchema({
             type: 'datetime',
         },
     },
+    relations: {
+        organization: {
+            target: 'Client', // Name of the related entity
+            type: 'many-to-one', // Relationship type
+            joinColumn: { name: 'organization_id' }, // Column used for the join
+        },
+    },
 });
 
 export default Extension;

@@ -1,57 +1,57 @@
 body {
-    font-family: Arial, sans-serif;
-    margin: 20px;
-    background-color: #f9f9f9;
+  font-family: Arial, sans-serif;
+  margin: 20px;
+  background-color: #f9f9f9;
 }
 
 .table {
-    width: 100%;
-    border-collapse: collapse;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-    border-radius: 8px;
-    overflow: hidden;
+  width: 100%;
+  border-collapse: collapse;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  border-radius: 8px;
+  overflow: hidden;
 }
 
 .table thead {
-    color: #fff;
+  color: #fff;
 }
 
-.table th, .table td {
-    padding: 12px 15px;
-    border-bottom: 1px solid #ddd;
+.table th,
+.table td {
+  padding: 12px 15px;
+  border-bottom: 1px solid #ddd;
 }
 
 .table th {
-    background:  #e2e2e6 !important;
-    font-size: 16px;
-    font-weight: 600;
+  background: #e2e2e6 !important;
+  font-size: 16px;
+  font-weight: 600;
+  position: sticky;
+  top: 0;
 }
 
 .table tbody tr:hover {
-    background-color: #f1f1f1;
+  background-color: #f1f1f1;
 }
 
 .table tbody tr:nth-child(even) {
-    background-color: #f9f9f9;
+  background-color: #f9f9f9;
 }
 
 .table tbody td button {
-    color: #fff;
-    border: none;
-    padding: 8px 12px;
-    border-radius: 4px;
-    cursor: pointer;
-    font-size: 14px;
+  color: #fff;
+  border: none;
+  padding: 8px 12px;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 14px;
 }
-
-
 
 .table tbody td {
-    color: #555;
+  color: #555;
 }
 
-
 .active_menu {
-    background: #cfe4ff;
-    color: #0d84d9;
+  background: #cfe4ff;
+  color: #0d84d9;
 }

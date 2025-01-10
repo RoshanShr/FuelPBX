@@ -1,16 +1,17 @@
 import * as Yup from "yup";
 
-export const registerSchema = (users, alias, userID= null) =>
+export const registerSchema = (users, alias, userID=null) =>
   Yup.object({
     fullname: Yup.string()
       .min(2, "Fullname must be at least 2 characters")
-      .max(15, "Fullname must be at least 2 characters")
+      .max(20, "Fullname must be at least 20 characters")
       .required("Fullname is required"),
 
     username: Yup.string()
       .min(2, "Username must be at least 2 characters")
-      .max(15, "Username must be at least 2 characters")
+      .max(15, "Username must be at least 15 characters")
       .required("Username is required")
+      .matches(/^[a-zA-Z0-9]+$/, "Username can only contain letters and numbers (no spaces or special characters)")
       .test("unique-name", "Username is already taken", function (value) {
         return !users?.some((user) => user.login_name === `${value}@${alias}` && userID!=user.id);
       }),
@@ -24,8 +25,8 @@ export const registerSchema = (users, alias, userID= null) =>
       }),
 
       password: Yup.string()
-      .when("userID", {
-        is: null, // Add validation only if userID is null (new user)
+      .when([], {
+        is: () => userID === null, // Check userID directly
         then: (schema) =>
           schema
             .min(8, "Password must be at least 8 characters")
@@ -39,8 +40,9 @@ export const registerSchema = (users, alias, userID= null) =>
         otherwise: (schema) => schema.optional(), // Make it optional for edit
       }),
 
-    confirm_password: Yup.string().when("userID", {
-      is: null, // Add validation only if userID is null (new user)
+    confirm_password: Yup.string()
+      .when([], {
+        is: () => userID === null, // Check userID directly
       then: (schema) =>
         schema
           .required("Confirm password is required")

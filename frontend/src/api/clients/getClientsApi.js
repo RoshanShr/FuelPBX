@@ -13,9 +13,10 @@ const clientApi = axios.create({
 });
 
 export const getClient = async (loggedData,page, limit) => {
+    console.log(loggedData.loggedUser.accessToken);
     const response = await clientApi.get(`/clients?organization_id=${loggedData.loggedUser.organization_id}&isAdmin=${loggedData.loggedUser.isAdmin}&page=${page}&limit=${limit}`, {
         headers: {
-            "Authorization": `Bearer ${loggedData.loggedUser.token}`
+            "Authorization": `Bearer ${loggedData.loggedUser.accessToken}`
         }
     });
     return response.data;

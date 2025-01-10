@@ -1,13 +1,16 @@
 import express from 'express';
 import {getUsers, addUser, updateUser, deleteUser} from '../controllers/usersController.js';
-import verifyToken from '../middleware/verifyToken.js';
+import verifyAccessToken from '../middleware/verifyAccessToken.js';
 
 const router = express.Router();
 
-router.get("/users",verifyToken,getUsers);
-router.post("/users",verifyToken,addUser);
-router.put("/users/:id",verifyToken,updateUser);
-router.delete("/users",verifyToken,deleteUser);
-// router.get("/credentials",verifyToken,getCredentials);
+// Apply the middleware globally to all routes
+router.use(verifyAccessToken);
+
+router.get("/users",getUsers);
+router.post("/users",addUser);
+router.put("/users/:id",updateUser);
+router.delete("/users",deleteUser);
+// router.get("/credentials",verifyAccessToken,getCredentials);
 
 export default router;

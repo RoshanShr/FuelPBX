@@ -26,7 +26,7 @@ export const deleteExtension = async ({
     try {
         const response = await userApi.delete("/extensions", {
             headers: {
-                "Authorization": `Bearer ${loggedData.loggedUser.token}`
+                "Authorization": `Bearer ${loggedData.loggedUser.accessToken}`
             },
             data: {
                 id: id

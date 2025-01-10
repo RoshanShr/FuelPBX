@@ -1,7 +1,6 @@
 import "bootstrap/dist/css/bootstrap.min.css";
 import "react-toastify/dist/ReactToastify.css";
 import { extensionSchema } from "../../../schemas/extensionSchema";
-import { ToastContainer } from "react-toastify";
 import Pagination from "../../../common/Pagination"; // Import the pagination component
 import { confirmAlert } from "react-confirm-alert"; // Import
 
@@ -14,10 +13,10 @@ import { useUpdateExtension } from "../../../api/extensions/updateExtensionApi";
 import ExtensionAddForm from "../Extensions/addForm";
 import { FaTrash, FaUserEdit } from "react-icons/fa";
 import { IoMdPersonAdd } from "react-icons/io";
-import moment from 'moment';
+import moment from "moment";
 
 function Extensions(organization) {
-  let { id, name } = organization.props;
+  let { id, alias, name } = organization.props;
 
   const loggedData = useContext(UserContext);
   const [currentPage, setCurrentPage] = useState(1);
@@ -29,7 +28,7 @@ function Extensions(organization) {
     isLoading,
     isError,
     error,
-  } = useGetExtensions(id, loggedData, currentPage, itemsPerPage);
+  } = useGetExtensions(id,alias, loggedData, currentPage, itemsPerPage);
 
   const extensions = extensionsData?.data || [];
   const totalItems = extensionsData?.totalItems || 0;
@@ -88,80 +87,98 @@ function Extensions(organization) {
   };
 
   return (
-    <div>
-      <div style={{flex: 1}}>
-        <ToastContainer />
+    <>
+      <div className="d-flex justify-content-end">
         <button
           title="Add extension"
-          style={{ float: "right" }}
           className="btn btn-primary"
           onClick={togglePopup}
         >
           <IoMdPersonAdd />
         </button>
-        <table className="table">
-          <thead>
-            <tr>
-              <th>Username</th>
-              <th>Agent</th>
-              <th>Extension</th>
-              <th>Status</th>
-              <th>Action</th>
-            </tr>
-          </thead>
-          <tbody>
-            {isLoading ? (
+      </div>
+      <div className="d-flex" style={{ height: "calc(100% - 172px)" }}>
+        <div className="overflow-auto flex-grow-1">
+          <table className="table overflow-auto">
+            <thead>
               <tr>
-                <td colSpan="3">Loading...</td>
+                <th>Username</th>
+                <th>Agent</th>
+                <th>Extension</th>
+                <th>Status</th>
+                <th>Created at</th>
+                <th>Action</th>
               </tr>
-            ) : isError ? (
-              <tr>
-                <td colSpan="3">Error: {error.message}</td>
-              </tr>
-            ) : extensions.length > 0 ? (
-              extensions.map((extension) => (
-                <tr key={extension.id}>
-                  <td>{extension.agent}</td>
-                  <td>{extension.agent}</td>
-                  <td>{extension.extension}</td>
-                  <td>{moment(extension.created_at).format('dddd, MMMM Do YYYY, h:mm:ss a')}</td>
-                  <td>
-                    <button
-                      title="Edit extension"
-                      className="btn btn-sm btn-info"
-                      onClick={() => handleEditButtonClick(extension)}
-                    >
-                      <FaUserEdit />
-                    </button>
-                    <button
-                      title="Delete extension"
-                      onClick={() => {
-                        deleteConfirmation(extension.id);
-                      }}
-                      className="btn btn-sm btn-danger"
-                    >
-                      <FaTrash />
-                    </button>
-                  </td>
+            </thead>
+            <tbody>
+              {isLoading ? (
+                <tr>
+                  <td colSpan="3">Loading...</td>
                 </tr>
-              ))
-            ) : (
-              <tr>
-                <td colSpan="5">No extensions available</td>
-              </tr>
-            )}
-          </tbody>
-        </table>
+              ) : isError ? (
+                <tr>
+                  <td colSpan="3">Error: {error.message}</td>
+                </tr>
+              ) : extensions.length > 0 ? (
+                extensions.map((extension) => (
+                  <tr key={extension.id}>
+                    <td>{extension.agent}</td>
+                    <td>{extension.agent}</td>
+                    <td>{extension.extension}</td>
+                    <td>
+                      <span
+                        className={
+                          extension.status == "Online"
+                            ? "badge bg-success"
+                            : "badge bg-danger"
+                        }
+                      >
+                        {extension.status}
+                      </span>
+                    </td>
+                    <td>
+                      {moment(extension.created_at).format(
+                        "dddd, MMMM Do YYYY, h:mm:ss a"
+                      )}
+                    </td>
+                    <td>
+                      <button
+                        title="Edit extension"
+                        className="btn btn-sm btn-info"
+                        onClick={() => handleEditButtonClick(extension)}
+                      >
+                        <FaUserEdit />
+                      </button>
+                      <button
+                        title="Delete extension"
+                        onClick={() => {
+                          deleteConfirmation(extension.id);
+                        }}
+                        className="btn btn-sm btn-danger"
+                      >
+                        <FaTrash />
+                      </button>
+                    </td>
+                  </tr>
+                ))
+              ) : (
+                <tr>
+                  <td colSpan="5">No extensions available</td>
+                </tr>
+              )}
+            </tbody>
+          </table>
+        </div>
       </div>
       {/* Pagination Component */}
       {!isLoading && !isError && (
-          <Pagination
-            totalItems={totalItems}
-            itemsPerPage={itemsPerPage}
-            currentPage={currentPage}
-            onPageChange={setCurrentPage}
-            onItemsPerPageChange={handleItemsPerPageChange}
-          />
+        <Pagination
+          totalItems={totalItems}
+          itemsPerPage={itemsPerPage}
+          currentPage={currentPage}
+          onPageChange={setCurrentPage}
+          onItemsPerPageChange={handleItemsPerPageChange}
+        />
       )}
       {showPopup && (
         <div className="modal d-block" tabIndex="-1" role="dialog">
@@ -202,7 +219,7 @@ function Extensions(organization) {
           </div>
         </div>
       )}
-    </div>
+    </>
   );
 }
 

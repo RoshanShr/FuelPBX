@@ -6,7 +6,6 @@ import Register from "./Register";
 import Clients from "./Clients";
 import ClientDetails from "./Clients/Details"; // Import the ClientDetails component
 import Reports from "./Reports/Reports";
-import Users from "./Users";
 import InvalidPage from "./PageNotFound/InvalidPage";
 import { Navigate } from "react-router-dom";
 import { useContext } from "react";
@@ -63,16 +62,6 @@ export const pages = [
           {
             path: "",
             element: <Reports />,
-          },
-        ],
-      },
-      {
-        path: "users",
-        element: <CommonWrapper />,
-        children: [
-          {
-            path: "",
-            element: <Users />,
           },
         ],
       },

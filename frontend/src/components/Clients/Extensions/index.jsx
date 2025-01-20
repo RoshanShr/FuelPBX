@@ -20,7 +20,7 @@ function Extensions(organization) {
 
   const loggedData = useContext(UserContext);
   const [currentPage, setCurrentPage] = useState(1);
-  const [itemsPerPage, setItemsPerPage] = useState(15);
+  const [itemsPerPage, setItemsPerPage] = useState(10);
   const [editExtension, setEditExtension] = useState(null);
 
   const {
@@ -28,14 +28,14 @@ function Extensions(organization) {
     isLoading,
     isError,
     error,
-  } = useGetExtensions(id,alias, loggedData, currentPage, itemsPerPage);
+  } = useGetExtensions(id,alias, currentPage, itemsPerPage);
 
   const extensions = extensionsData?.data || [];
   const totalItems = extensionsData?.totalItems || 0;
 
   const addExtensionMutation = useAddExtension(loggedData);
-  const deleteExtnesionMutation = useDeleteExtension(loggedData);
-  const updateExtensionMutation = useUpdateExtension(loggedData);
+  const deleteExtensionMutation = useDeleteExtension();
+  const updateExtensionMutation = useUpdateExtension();
 
   const handleAddExtension = (extensionsData) => {
     addExtensionMutation.mutate(extensionsData);
@@ -70,7 +70,7 @@ function Extensions(organization) {
   }
 
   function handleDelete(id) {
-    deleteExtnesionMutation.mutate(id);
+    deleteExtensionMutation.mutate(id);
   }
 
   const [showPopup, setShowPopup] = useState(false);

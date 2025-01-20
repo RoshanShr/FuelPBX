@@ -1,4 +1,3 @@
-import axios from "axios";
 import {
     useMutation,
     useQueryClient
@@ -17,20 +16,13 @@ import {
 import {
     useNavigate
 } from "react-router-dom"
+import apiClient from "../../utils/apiClient";
 
 const jwtSecretKey = import.meta.env.VITE_JWT_SECRET_KEY;
 const notify = (type, msg) => toast[type](msg);
 
-const apiUrl =
-    import.meta.env.VITE_API_URL;
-
-const clientApi = axios.create({
-    baseURL: apiUrl
-});
-
-
 export const login = async (data) => {
-    const response = await clientApi.post("/login", data.data);
+    const response = await apiClient.post("/login", data.data);
     return response;
 
 };

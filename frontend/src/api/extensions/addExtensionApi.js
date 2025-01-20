@@ -1,4 +1,3 @@
-import axios from "axios";
 import {
     useMutation,
     useQueryClient
@@ -7,25 +6,15 @@ import {
 import {
     toast
 } from 'react-toastify';
+import apiClient from "../../utils/apiClient";
 
 const notify = (type, msg) => toast[type](msg);
-
-const apiUrl =
-    import.meta.env.VITE_API_URL;
-
-const clientApi = axios.create({
-    baseURL: apiUrl
-});
 
 
 export const addExtension = async (
     data
 ) => {
-    await clientApi.post("/extensions", data.extensionData, {
-        headers: {
-            "Authorization": `Bearer ${data.loggedData.loggedUser.accessToken}`
-        }
-    });
+    await apiClient.post("/extensions", data.extensionData);
 
 }
 

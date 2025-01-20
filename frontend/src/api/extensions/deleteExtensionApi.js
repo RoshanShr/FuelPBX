@@ -1,4 +1,3 @@
-import axios from "axios";
 import {
     useMutation,
     useQueryClient
@@ -8,26 +7,16 @@ import {
     toast
 } from 'react-toastify';
 
+import apiClient from "../../utils/apiClient";
+
 const notify = (type, msg) => toast[type](msg);
-
-const apiUrl =
-    import.meta.env.VITE_API_URL;
-
-const userApi = axios.create({
-    baseURL: apiUrl
-});
-
 
 
 export const deleteExtension = async ({
-    loggedData,
     id
 }) => {
     try {
-        const response = await userApi.delete("/extensions", {
-            headers: {
-                "Authorization": `Bearer ${loggedData.loggedUser.accessToken}`
-            },
+        const response = await apiClient.delete("/extensions", {
             data: {
                 id: id
             }
@@ -42,10 +31,9 @@ export const deleteExtension = async ({
 }
 
 
-export const useDeleteExtension = (loggedData) => {
+export const useDeleteExtension = () => {
     const queryClient = useQueryClient();
     return useMutation((id) => deleteExtension({
-        loggedData,
         id
     }), {
         onSuccess: () => {

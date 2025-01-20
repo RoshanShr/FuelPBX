@@ -5,8 +5,7 @@ import { useAddUser } from "../../../api/users/addUserApi";
 import Pagination from "../../../common/Pagination"; // Import the pagination component
 import { confirmAlert } from "react-confirm-alert"; // Import
 
-import { UserContext } from "../../../contexts/UserContext";
-import { useState, useContext } from "react";
+import { useState } from "react";
 import { useGetUsers } from "../../../api/users/getUsersApi";
 import { useDeleteUser } from "../../../api/users/deleteUserApi";
 import { useUpdateUser } from "../../../api/users/updateUserApi";
@@ -17,10 +16,9 @@ import moment from "moment";
 
 function Users(organization) {
   const { id, name, alias } = organization.props;
-  const loggedData = useContext(UserContext);
 
   const [currentPage, setCurrentPage] = useState(1);
-  const [itemsPerPage, setItemsPerPage] = useState(15);
+  const [itemsPerPage, setItemsPerPage] = useState(10);
   const [showPopup, setShowPopup] = useState(false);
   const [editUser, setEditUser] = useState(null);
 
@@ -29,11 +27,11 @@ function Users(organization) {
     isLoading,
     isError,
     error,
-  } = useGetUsers(id, loggedData, currentPage, itemsPerPage);
+  } = useGetUsers(id, currentPage, itemsPerPage);
 
-  const addUserMutation = useAddUser(loggedData);
-  const deleteUserMutation = useDeleteUser(loggedData);
-  const updateUserMutation = useUpdateUser(loggedData);
+  const addUserMutation = useAddUser();
+  const deleteUserMutation = useDeleteUser();
+  const updateUserMutation = useUpdateUser();
 
   const users = usersData?.data || [];
   const totalItems = usersData?.totalItems || 0;

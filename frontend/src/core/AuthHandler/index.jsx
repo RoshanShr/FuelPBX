@@ -9,7 +9,7 @@ const AuthHandler = () => {
   useEffect(() => {
     const token = localStorage.getItem("hostedpbx");
     if (!token && !publicPages.includes(location.pathname)) {
-      navigate("/login");
+      navigate("/");
     } else if (token && publicPages.includes(location.pathname)) {
       navigate("/dashboard");
     }

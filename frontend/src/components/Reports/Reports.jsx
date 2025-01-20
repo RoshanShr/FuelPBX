@@ -9,7 +9,7 @@ const Reports = () => {
 
   // Pagination state
   const [currentPage, setCurrentPage] = useState(1);
-  const [itemsPerPage, setItemsPerPage] = useState(15); // Default 10 items per page
+  const [itemsPerPage, setItemsPerPage] = useState(10); // Default 10 items per page
   const [dispositionFilter, setDispositionFilter] = useState("All");
   const [callTypeFilter, setCallTypeFilter] = useState("All");
 

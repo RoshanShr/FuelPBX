@@ -1,31 +1,19 @@
-import axios from "axios";
 import {
     useQuery
 
 } from "react-query";
 
+import apiClient from "../../utils/apiClient";
 
-const apiUrl =
-    import.meta.env.VITE_API_URL;
-
-const usersApi = axios.create({
-    baseURL: apiUrl
-});
-
-export const getUsers = async (organization_id, loggedData,page, limit) => {
-    const response = await usersApi.get(`/users?organization_id=${organization_id}&page=${page}&limit=${limit}`, {
-        headers: {
-            "Authorization": `Bearer ${loggedData.loggedUser.accessToken}`
-        }
-    });
+export const getUsers = async (organization_id,page, limit) => {
+    const response = await apiClient.get(`/users?organization_id=${organization_id}&page=${page}&limit=${limit}`);
     return response.data;
 }
 
-
-export const useGetUsers = (organization_id,loggedData, currentPage, itemsPerPage) => {
+export const useGetUsers = (organization_id, currentPage, itemsPerPage) => {
     return useQuery(
         ["users", organization_id, currentPage,  itemsPerPage], // Query key includes currentPage for dynamic fetching
-        () => getUsers(organization_id, loggedData, currentPage, itemsPerPage),
+        () => getUsers(organization_id, currentPage, itemsPerPage),
         {
           //  staleTime: 300000,  // Set staleTime to 5 minutes (in ms)
           //  cacheTime: 600000,  // Set cacheTime to 10 minutes (in ms)

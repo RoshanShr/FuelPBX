@@ -26,7 +26,7 @@ const Clients = () => {
   const togglePopup = () => setShowForm(!showForm);
 
   const [currentPage, setCurrentPage] = useState(1);
-  const [itemsPerPage, setItemsPerPage] = useState(15); // Default 10 items per page
+  const [itemsPerPage, setItemsPerPage] = useState(10); // Default 10 items per page
   const navigate = useNavigate();
 
   const {
@@ -36,7 +36,7 @@ const Clients = () => {
     error,
   } = useGetClients(loggedData, currentPage, itemsPerPage);
   const addClientMutation = useAddClient(loggedData);
-  const deleteClientMutation = useDeleteClient(loggedData);
+  const deleteClientMutation = useDeleteClient();
   // Pagination state
 
   const clients = clientsData?.data || [];

@@ -10,17 +10,14 @@ import clientRouter from './src/routes/clients.js';
 import reportsRouter from './src/routes/reports.js';
 import extensionsRouter from './src/routes/extensions.js';
 import dialplanRouter from './src/routes/dialplan.js';
-import 'dotenv/config';
-import {handleRefreshToken} from './src/middleware/handleRefreshToken.js';
+import authRouter from './src/routes/auth.js';
 
 const app = express();
 
 app.use(express.json());
 app.use(cors());
 
-app.post("/refresh", handleRefreshToken);
-
-
+app.use(authRouter);
 app.use(loginRouter);
 app.use(usersRouter);
 app.use(clientRouter);

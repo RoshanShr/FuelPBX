@@ -1,26 +1,7 @@
-import axios from "axios";
 import {
     useQuery
-
-} from "react-query";
-
-
-const apiUrl =
-    import.meta.env.VITE_API_URL;
-
-const clientApi = axios.create({
-    baseURL: apiUrl
-});
-
-export const getClient = async (loggedData,page, limit) => {
-    console.log(loggedData.loggedUser.accessToken);
-    const response = await clientApi.get(`/clients?organization_id=${loggedData.loggedUser.organization_id}&isAdmin=${loggedData.loggedUser.isAdmin}&page=${page}&limit=${limit}`, {
-        headers: {
-            "Authorization": `Bearer ${loggedData.loggedUser.accessToken}`
-        }
-    });
-    return response.data;
-}
+} from '@tanstack/react-query';
+import apiClient from "../../utils/apiClient";
 
 // React Query Hooks
 
@@ -32,22 +13,19 @@ export const getClient = async (loggedData,page, limit) => {
 //     });
 // };
 
-
-
 export const useGetClients = (loggedData, currentPage, itemsPerPage) => {
-    return useQuery(
-        ["clients", currentPage,  itemsPerPage], // Query key includes currentPage for dynamic fetching
-        () => getClient(loggedData, currentPage, itemsPerPage),
-        {
-          //  staleTime: 300000,  // Set staleTime to 5 minutes (in ms)
-          //  cacheTime: 600000,  // Set cacheTime to 10 minutes (in ms)
-           // refetchOnWindowFocus: false, // Optional: Prevent refetching when window is focused
-            onError: (error) => {
-                console.error('Error fetching clients:', error);
-            },
-            // Optionally, you can add other settings, like:
-            // enabled: true, // only fetch if certain conditions are met
-            // retry: false, // disable retrying failed requests
-        }
-    );
+    return useQuery({
+        queryKey: ["clients", currentPage, itemsPerPage], // Query key with dynamic parameters
+        queryFn: async () => {
+            const response = await apiClient.get(`/clients?organization_id=${loggedData.loggedUser.organization_id}&isAdmin=${loggedData.loggedUser.isAdmin}&page=${currentPage}&limit=${itemsPerPage}`);
+            return response.data;
+        },
+
+        onError: (error) => {
+            console.error('Error fetching clients:', error);
+        },
+        enabled: !!localStorage.getItem('accessToken'), // Conditional fetching (optional)
+        // retry: false, // Disable retrying failed requests
+    });
 };
+

@@ -18,7 +18,6 @@ server: {
   host: hostAddress,  // Listen on all interfaces
   port: hostPort,        // Replace with your desired port
   open: true,        // Automatically open the browser
-},
-base: '/login', // Base URL for the application
+}
 
 })

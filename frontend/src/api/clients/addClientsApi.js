@@ -1,8 +1,7 @@
-import axios from "axios";
 import {
-    useMutation,
-    useQueryClient
-} from "react-query";
+    useMutation
+} from '@tanstack/react-query';
+import apiClient from "../../utils/apiClient";
 
 import {
     toast
@@ -10,38 +9,49 @@ import {
 
 const notify = (type, msg) => toast[type](msg);
 
-const apiUrl =
-    import.meta.env.VITE_API_URL;
 
-const clientApi = axios.create({
-    baseURL: apiUrl
-});
+// export const addClient = async (
+//     data
+// ) => {
+//     await apiClient.post("/clients", data.clientData);
+//     // await apiClient.post("/clients", data.clientData, {
+//     //     headers: {
+//     //         "Authorization": `Bearer ${data.loggedData.loggedUser.accessToken}`
+//     //     }
+//     // });
 
-
-export const addClient = async (
-    data
-) => {
-    await clientApi.post("/clients", data.clientData, {
-        headers: {
-            "Authorization": `Bearer ${data.loggedData.loggedUser.accessToken}`
-        }
-    });
-
-}
+// }
 
 
-export const useAddClient = (loggedData) => {
-    const queryClient = useQueryClient();
-    return useMutation((clientData) => addClient({
-        loggedData,
-        clientData
-    }), {
+export const useAddClient = () => {
+    return useMutation({
+        queryKey: ["clients"], // Query key with dynamic parameters
+        mutationFn: async (clientData) => {
+            await apiClient.post("/clients", clientData);
+        },
         onSuccess: () => {
-            queryClient.invalidateQueries("clients");
             notify("success", "Client added successfully")
         },
         onError: (error) => {
             notify("error", `Error while adding client:${error.message}`)
         },
+        enabled: !!localStorage.getItem('accessToken'), // Conditional fetching (optional)
+        // retry: false, // Disable retrying failed requests
     });
 };
+
+// export const useAddClient = (loggedData) => {
+//     const queryClient = useQueryClient();
+//     return useMutation((clientData) => addClient({
+//         loggedData,
+//         clientData
+//     }), {
+//         onSuccess: () => {
+//             queryClient.invalidateQueries("clients");
+//             notify("success", "Client added successfully")
+//         },
+//         onError: (error) => {
+//             notify("error", `Error while adding client:${error.message}`)
+//         },
+//     });
+// };

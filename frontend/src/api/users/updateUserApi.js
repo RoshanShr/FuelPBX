@@ -1,4 +1,3 @@
-import axios from "axios";
 import {
     useMutation,
     useQueryClient
@@ -7,33 +6,21 @@ import {
 import {
     toast
 } from 'react-toastify';
+import apiClient from "../../utils/apiClient";
 
 const notify = (type, msg) => toast[type](msg);
-
-const apiUrl =
-    import.meta.env.VITE_API_URL;
-
-const clientApi = axios.create({
-    baseURL: apiUrl
-});
 
 
 export const updateUser = async (
     data
 ) => {
-    await clientApi.put(`/users/${data.userData.id}`, data.userData, {
-        headers: {
-            "Authorization": `Bearer ${data.loggedData.loggedUser.accessToken}`
-        }
-    });
+    await apiClient.put(`/users/${data.userData.id}`, data.userData);
 
 }
 
-
-export const useUpdateUser = (loggedData) => {
+export const useUpdateUser = () => {
     const queryClient = useQueryClient();
     return useMutation((userData) => updateUser({
-        loggedData,
         userData
     }), {
         onSuccess: () => {

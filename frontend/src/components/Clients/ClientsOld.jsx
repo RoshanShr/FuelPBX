@@ -23,6 +23,8 @@ const Clients = () => {
 
     function logout() {
         localStorage.removeItem("hostedpbx");
+        localStorage.removeItem("accessToken");
+        localStorage.removeItem("refreshToken");
         loggedData.setLoggedUser(null);
         navigate("/login");
     }

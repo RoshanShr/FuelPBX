@@ -4,6 +4,7 @@ import { useNavigate } from "react-router-dom";
 import { UserContext } from "../../contexts/UserContext";
 import { useContext } from "react";
 import { CiLogout } from "react-icons/ci";
+import { ToastContainer } from "react-toastify";
 
 const CommonWrapper = ({ children }) => {
   const navigate = useNavigate();
@@ -18,6 +19,8 @@ const CommonWrapper = ({ children }) => {
   return (
     <div className="d-flex vh-100">
       <Sidebar />
+      <ToastContainer />
+
       <div className="flex-grow-1 d-flex flex-column">
         {/* Header Section */}
         <div

@@ -1,4 +1,3 @@
-import axios from "axios";
 import {
     useMutation,
     useQueryClient
@@ -7,27 +6,15 @@ import {
 import {
     toast
 } from 'react-toastify';
+import apiClient from "../../utils/apiClient";
 
 const notify = (type, msg) => toast[type](msg);
 
-const apiUrl =
-    import.meta.env.VITE_API_URL;
-
-const userApi = axios.create({
-    baseURL: apiUrl
-});
-
-
-
 export const deleteUser = async ({
-    loggedData,
     id
 }) => {
     try {
-        const response = await userApi.delete("/users", {
-            headers: {
-                "Authorization": `Bearer ${loggedData.loggedUser.accessToken}`
-            },
+        const response = await apiClient.delete("/users", {
             data: {
                 id: id
             }
@@ -51,13 +38,9 @@ export const deleteUser = async ({
 
 }
 
-
-
-
-export const useDeleteUser = (loggedData) => {
+export const useDeleteUser = () => {
     const queryClient = useQueryClient();
     return useMutation((id) => deleteUser({
-        loggedData,
         id
     }), {
         onSuccess: () => {

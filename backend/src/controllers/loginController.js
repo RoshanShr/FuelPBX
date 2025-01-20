@@ -9,11 +9,9 @@ import {
 } from '../utils/timeUtils.js'
 import Client from '../models/clientModel.js';
 import {
-    generateAccessToken
-} from '../utils/generateAccessToken.js'
-import {
-    generateRefreshToken
-} from '../utils/generateRefreshToken.js'
+    generateAccessToken,generateRefreshToken
+} from '../services/tokenService.js'
+
 
 export const checkUser = async (req, res) => {
     try {
